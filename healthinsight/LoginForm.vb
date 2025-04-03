@@ -1,79 +1,132 @@
-﻿Public Class LoginForm
-    Private Sub LoginForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' Set up form
-        Me.StartPosition = FormStartPosition.CenterScreen
+﻿Imports MySql.Data.MySqlClient
 
-        ' Set password TextBox to use password char
-        Guna2TextBox2.UseSystemPasswordChar = True
+Public Class LoginForm
+    Private connectionString As String = "server=localhost;userid=root;password=Kanha*#0100;database=healthinsights"
 
-        ' Set initial focus to username field
-        Guna2TextBox1.Focus()
-    End Sub
-
-    Private Sub Guna2GradientTileButton1_Click(sender As Object, e As EventArgs) Handles Guna2GradientTileButton1.Click
-        ' Open registration form when "Don't have an account? Register" button is clicked
-        ' Make sure RegistrationForm exists first
+    ' Function to retrieve user ID from database
+    Private Function GetUserIdFromDatabase(username As String, password As String) As Integer
+        Dim userId As Integer = -1 ' Default if user not found
         Try
-            ' Fix: Make sure RegistrationForm is properly referenced
-            ' The error likely comes from the RegistrationForm instantiation
-            If GetType(RegisterForm) IsNot Nothing Then
-                Dim registrationForm As Form = New RegisterForm()
-                registrationForm.Show()
-                Me.Hide()
-            Else
-                MessageBox.Show("Registration Form class not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End If
+            Using conn As New MySqlConnection(connectionString)
+                conn.Open()
+                Dim query As String = "SELECT userid FROM users WHERE email = @username AND password = @password"
+                Using cmd As New MySqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@username", username)
+                    cmd.Parameters.AddWithValue("@password", password)
+
+                    Dim result = cmd.ExecuteScalar()
+                    If result IsNot Nothing Then
+                        userId = Convert.ToInt32(result)
+                    End If
+                End Using
+            End Using
         Catch ex As Exception
-            MessageBox.Show("Could not open Registration Form: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Error fetching user ID: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
-    End Sub
+        Return userId
+    End Function
 
-    ' If you don't have a btnLogin control on your form, create one or modify this to match your control
-    ' Remove the "Handles btnLogin.Click" if you don't have a btnLogin control
-    Private Sub btnLogin_Click(sender As Object, e As EventArgs)
-        ' Get values from text boxes
+    ' Login Button Click Event
+    Private Sub Guna2GradientTileButton2_Click(sender As Object, e As EventArgs) Handles Guna2GradientTileButton2.Click
+        ' Get input values
         Dim username As String = Guna2TextBox1.Text.Trim()
-        Dim password As String = Guna2TextBox2.Text
+        Dim password As String = Guna2TextBox2.Text.Trim()
 
-        ' Basic validation
-        If String.IsNullOrEmpty(username) OrElse String.IsNullOrEmpty(password) Then
-            MessageBox.Show("Please enter both username and password.", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        ' Validate inputs
+        If username = "" OrElse password = "" Then
+            MessageBox.Show("Please enter both username and password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
         End If
 
-        ' Call verification method
-        If VerifyUser(username, password) Then
-            ' Successful login
-            MessageBox.Show("Login successful!", "Welcome", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Try
+            Using conn As New MySqlConnection(connectionString)
+                conn.Open()
+                Dim query As String = "SELECT userid FROM users WHERE username = @username AND password = @password"
+                Using cmd As New MySqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@username", username)
+                    cmd.Parameters.AddWithValue("@password", password)
 
-            ' Since MainForm doesn't exist yet, we'll just display a message
-            MessageBox.Show("Login successful! MainForm would open here.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Dim reader As MySqlDataReader = cmd.ExecuteReader()
 
-            ' When you create MainForm, uncomment these lines:
-            ' Dim mainForm As New MainForm()
-            ' mainForm.Show()
-            ' Me.Hide()
-        Else
-            ' Failed login
-            MessageBox.Show("Invalid username or password.", "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Guna2TextBox2.Clear()
-            Guna2TextBox2.Focus()
-        End If
+                    If reader.Read() Then
+                        ' Retrieve and store the logged-in user ID globally
+                        LoggedInUserId = Convert.ToInt32(reader("userid"))
+                        MessageBox.Show("Login successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+                        ' Open the Body Part selection form
+                        Dim bodypartForm As New bodypart(LoggedInUserId)
+                        bodypartForm.Show()
+                        Me.Hide()
+                    Else
+                        MessageBox.Show("Invalid username or password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End If
+
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
-    ' This is a placeholder method until you create your database
-    Private Function VerifyUser(username As String, password As String) As Boolean
-        ' TEMPORARY: For testing purposes only
-        ' Replace this with actual database verification later
-        ' For now, accept "admin" / "password" as valid credentials
-        Return (username = "admin" And password = "password")
-    End Function
-
-    ' Optional: Add this if you want to press Enter key to login
-    Private Sub Guna2TextBox2_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Guna2TextBox2.KeyPress
-        If e.KeyChar = ChrW(Keys.Enter) Then
-            e.Handled = True ' Prevent the ding sound
-            btnLogin_Click(sender, New EventArgs())
-        End If
+    Private Sub Guna2GradientTileButton1_Click(sender As Object, e As EventArgs) Handles Guna2GradientTileButton1.Click
+        Dim reg As New RegisterForm()
+        reg.Show()
+        Me.Hide()
     End Sub
+
+    Private Sub LinkLabel1_Click(sender As Object, e As EventArgs) Handles LinkLabel1.Click
+        ' Step 1: Get the user's email
+        Dim email As String = InputBox("Enter your registered email:", "Forgot Password")
+
+        ' Validate email input
+        If String.IsNullOrWhiteSpace(email) Then
+            MessageBox.Show("Email cannot be empty!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        Try
+            Using conn As New MySqlConnection(connectionString)
+                conn.Open()
+
+                ' Step 2: Check if the email exists
+                Dim checkQuery As String = "SELECT userid FROM users WHERE email = @Email"
+                Using checkCmd As New MySqlCommand(checkQuery, conn)
+                    checkCmd.Parameters.AddWithValue("@Email", email)
+
+                    Dim result = checkCmd.ExecuteScalar()
+                    If result Is Nothing Then
+                        MessageBox.Show("Email not found!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Return
+                    End If
+                End Using
+
+                ' Step 3: Get new password from user
+                Dim newPassword As String = InputBox("Enter your new password:", "Reset Password")
+
+                ' Validate password input
+                If String.IsNullOrWhiteSpace(newPassword) Then
+                    MessageBox.Show("Password cannot be empty!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return
+                End If
+
+                ' Step 4: Update the password in the database
+                Dim updateQuery As String = "UPDATE users SET password = @NewPassword WHERE email = @Email"
+                Using updateCmd As New MySqlCommand(updateQuery, conn)
+                    updateCmd.Parameters.AddWithValue("@NewPassword", newPassword)
+                    updateCmd.Parameters.AddWithValue("@Email", email)
+
+                    Dim rowsAffected As Integer = updateCmd.ExecuteNonQuery()
+                    If rowsAffected > 0 Then
+                        MessageBox.Show("Password updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Else
+                        MessageBox.Show("Failed to update password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End If
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
 End Class
+

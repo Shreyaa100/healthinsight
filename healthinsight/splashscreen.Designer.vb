@@ -38,8 +38,7 @@ Partial Class splashscreen
         Guna2PictureBox1.CustomizableEdges = CustomizableEdges1
         Guna2PictureBox1.Image = CType(resources.GetObject("Guna2PictureBox1.Image"), Image)
         Guna2PictureBox1.ImageRotate = 0F
-        Guna2PictureBox1.Location = New Point(176, -93)
-        Guna2PictureBox1.Margin = New Padding(4)
+        Guna2PictureBox1.Location = New Point(156, -94)
         Guna2PictureBox1.Name = "Guna2PictureBox1"
         Guna2PictureBox1.ShadowDecoration.CustomizableEdges = CustomizableEdges2
         Guna2PictureBox1.Size = New Size(500, 500)
@@ -51,11 +50,10 @@ Partial Class splashscreen
         ' 
         ProgressBar1.AnimationSpeed = 97
         ProgressBar1.AutoStart = True
-        ProgressBar1.Location = New Point(427, 406)
-        ProgressBar1.Margin = New Padding(4)
+        ProgressBar1.Location = New Point(382, 430)
         ProgressBar1.Name = "ProgressBar1"
         ProgressBar1.ShadowDecoration.CustomizableEdges = CustomizableEdges3
-        ProgressBar1.Size = New Size(125, 111)
+        ProgressBar1.Size = New Size(83, 74)
         ProgressBar1.TabIndex = 3
         ' 
         ' Timer1
@@ -65,13 +63,13 @@ Partial Class splashscreen
         ' 
         ' splashscreen
         ' 
-        AutoScaleDimensions = New SizeF(12F, 30F)
+        AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(960, 540)
+        BackColor = Color.LightCyan
+        ClientSize = New Size(863, 539)
         Controls.Add(ProgressBar1)
         Controls.Add(Guna2PictureBox1)
         FormBorderStyle = FormBorderStyle.None
-        Margin = New Padding(4)
         Name = "splashscreen"
         StartPosition = FormStartPosition.CenterScreen
         Text = "Form2"
