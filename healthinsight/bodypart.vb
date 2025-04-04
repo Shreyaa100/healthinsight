@@ -11,6 +11,23 @@ Public Class bodypart
         InitializeComponent()  ' Required for Windows Form Designer
         LoggedInUserId = userId ' Assign the user ID
     End Sub
+    Private Function UserExists(userId As Integer) As Boolean
+        Dim exists As Boolean = False
+        Try
+            Using conn As New MySqlConnection(connectionString)
+                conn.Open()
+                Dim query As String = "SELECT COUNT(*) FROM users WHERE userid = @userid"
+                Using cmd As New MySqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@userid", userId)
+                    exists = Convert.ToInt32(cmd.ExecuteScalar()) > 0
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error checking user existence: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        Return exists
+    End Function
+
 
     ' Function to load body parts into ComboBox1 from database
     Private Sub LoadBodyParts()
@@ -212,7 +229,7 @@ Public Class bodypart
         End If
 
         Dim allQuestions As String = String.Join(vbCrLf, questions(0), questions(1), questions(2), questions(3))
-        Dim diagForm As New diagnosis(userId, selectedBodyPart, allQuestions)
+        Dim diagForm As New diagnosis(userId, selectedBodyPart)
         diagForm.Show()
         Me.Hide()
 

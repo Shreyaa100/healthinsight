@@ -154,14 +154,14 @@ Partial Class diagnosis
         Guna2TextBox2.FocusedState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
         Guna2TextBox2.Font = New Font("Segoe UI", 9F)
         Guna2TextBox2.HoverState.BorderColor = Color.FromArgb(CByte(94), CByte(148), CByte(255))
-        Guna2TextBox2.Location = New Point(117, 120)
+        Guna2TextBox2.Location = New Point(117, 80)
         Guna2TextBox2.Margin = New Padding(3, 4, 3, 4)
         Guna2TextBox2.Multiline = True
         Guna2TextBox2.Name = "Guna2TextBox2"
         Guna2TextBox2.PlaceholderText = ""
         Guna2TextBox2.SelectedText = ""
         Guna2TextBox2.ShadowDecoration.CustomizableEdges = CustomizableEdges6
-        Guna2TextBox2.Size = New Size(350, 42)
+        Guna2TextBox2.Size = New Size(350, 134)
         Guna2TextBox2.TabIndex = 6
         ' 
         ' Guna2TextBox1
@@ -202,7 +202,7 @@ Partial Class diagnosis
         Guna2Button1.ShadowDecoration.CustomizableEdges = CustomizableEdges10
         Guna2Button1.Size = New Size(173, 26)
         Guna2Button1.TabIndex = 4
-        Guna2Button1.Text = "Recommendations"
+        Guna2Button1.Text = "Back Home"
         ' 
         ' Label5
         ' 

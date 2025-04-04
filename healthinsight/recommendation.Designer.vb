@@ -30,13 +30,17 @@ Partial Class recommendation
         Dim CustomizableEdges4 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Dim CustomizableEdges1 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
         Dim CustomizableEdges2 As Guna.UI2.WinForms.Suite.CustomizableEdges = New Guna.UI2.WinForms.Suite.CustomizableEdges()
+        Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(components)
         Guna2PictureBox1 = New Guna.UI2.WinForms.Guna2PictureBox()
         Label2 = New Label()
-        RichTextBox1 = New RichTextBox()
         Guna2ComboBox1 = New Guna.UI2.WinForms.Guna2ComboBox()
         Guna2Button1 = New Guna.UI2.WinForms.Guna2Button()
+        Guna2DataGridView1 = New Guna.UI2.WinForms.Guna2DataGridView()
         CType(Guna2PictureBox1, ComponentModel.ISupportInitialize).BeginInit()
+        CType(Guna2DataGridView1, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' Guna2BorderlessForm1
@@ -71,16 +75,6 @@ Partial Class recommendation
         Label2.TabIndex = 8
         Label2.Text = "Recommendations"
         ' 
-        ' RichTextBox1
-        ' 
-        RichTextBox1.BackColor = Color.LightCyan
-        RichTextBox1.Location = New Point(525, 106)
-        RichTextBox1.Name = "RichTextBox1"
-        RichTextBox1.Size = New Size(444, 453)
-        RichTextBox1.TabIndex = 12
-        RichTextBox1.Text = ""
-        RichTextBox1.Visible = False
-        ' 
         ' Guna2ComboBox1
         ' 
         Guna2ComboBox1.BackColor = Color.LightCyan
@@ -112,12 +106,64 @@ Partial Class recommendation
         Guna2Button1.FillColor = Color.PaleTurquoise
         Guna2Button1.Font = New Font("Segoe UI", 9F)
         Guna2Button1.ForeColor = Color.Black
-        Guna2Button1.Location = New Point(666, 579)
+        Guna2Button1.Location = New Point(651, 570)
         Guna2Button1.Name = "Guna2Button1"
         Guna2Button1.ShadowDecoration.CustomizableEdges = CustomizableEdges2
         Guna2Button1.Size = New Size(176, 32)
         Guna2Button1.TabIndex = 15
-        Guna2Button1.Text = "Feedback"
+        Guna2Button1.Text = "Return Home"
+        ' 
+        ' Guna2DataGridView1
+        ' 
+        DataGridViewCellStyle1.BackColor = Color.White
+        Guna2DataGridView1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        Guna2DataGridView1.BackgroundColor = Color.LightCyan
+        DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = Color.FromArgb(CByte(100), CByte(88), CByte(255))
+        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9F)
+        DataGridViewCellStyle2.ForeColor = Color.White
+        DataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = DataGridViewTriState.True
+        Guna2DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Guna2DataGridView1.ColumnHeadersHeight = 4
+        Guna2DataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing
+        DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = Color.White
+        DataGridViewCellStyle3.Font = New Font("Segoe UI", 9F)
+        DataGridViewCellStyle3.ForeColor = Color.FromArgb(CByte(71), CByte(69), CByte(94))
+        DataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(CByte(231), CByte(229), CByte(255))
+        DataGridViewCellStyle3.SelectionForeColor = Color.FromArgb(CByte(71), CByte(69), CByte(94))
+        DataGridViewCellStyle3.WrapMode = DataGridViewTriState.False
+        Guna2DataGridView1.DefaultCellStyle = DataGridViewCellStyle3
+        Guna2DataGridView1.GridColor = Color.FromArgb(CByte(231), CByte(229), CByte(255))
+        Guna2DataGridView1.Location = New Point(515, 172)
+        Guna2DataGridView1.Name = "Guna2DataGridView1"
+        Guna2DataGridView1.RowHeadersVisible = False
+        Guna2DataGridView1.RowHeadersWidth = 51
+        Guna2DataGridView1.Size = New Size(462, 225)
+        Guna2DataGridView1.TabIndex = 16
+        Guna2DataGridView1.ThemeStyle.AlternatingRowsStyle.BackColor = Color.White
+        Guna2DataGridView1.ThemeStyle.AlternatingRowsStyle.Font = Nothing
+        Guna2DataGridView1.ThemeStyle.AlternatingRowsStyle.ForeColor = Color.Empty
+        Guna2DataGridView1.ThemeStyle.AlternatingRowsStyle.SelectionBackColor = Color.Empty
+        Guna2DataGridView1.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = Color.Empty
+        Guna2DataGridView1.ThemeStyle.BackColor = Color.LightCyan
+        Guna2DataGridView1.ThemeStyle.GridColor = Color.FromArgb(CByte(231), CByte(229), CByte(255))
+        Guna2DataGridView1.ThemeStyle.HeaderStyle.BackColor = Color.FromArgb(CByte(100), CByte(88), CByte(255))
+        Guna2DataGridView1.ThemeStyle.HeaderStyle.BorderStyle = DataGridViewHeaderBorderStyle.None
+        Guna2DataGridView1.ThemeStyle.HeaderStyle.Font = New Font("Segoe UI", 9F)
+        Guna2DataGridView1.ThemeStyle.HeaderStyle.ForeColor = Color.White
+        Guna2DataGridView1.ThemeStyle.HeaderStyle.HeaightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing
+        Guna2DataGridView1.ThemeStyle.HeaderStyle.Height = 4
+        Guna2DataGridView1.ThemeStyle.ReadOnly = False
+        Guna2DataGridView1.ThemeStyle.RowsStyle.BackColor = Color.White
+        Guna2DataGridView1.ThemeStyle.RowsStyle.BorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
+        Guna2DataGridView1.ThemeStyle.RowsStyle.Font = New Font("Segoe UI", 9F)
+        Guna2DataGridView1.ThemeStyle.RowsStyle.ForeColor = Color.FromArgb(CByte(71), CByte(69), CByte(94))
+        Guna2DataGridView1.ThemeStyle.RowsStyle.Height = 29
+        Guna2DataGridView1.ThemeStyle.RowsStyle.SelectionBackColor = Color.FromArgb(CByte(231), CByte(229), CByte(255))
+        Guna2DataGridView1.ThemeStyle.RowsStyle.SelectionForeColor = Color.FromArgb(CByte(71), CByte(69), CByte(94))
         ' 
         ' recommendation
         ' 
@@ -125,15 +171,16 @@ Partial Class recommendation
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.MediumTurquoise
         ClientSize = New Size(1012, 623)
+        Controls.Add(Guna2DataGridView1)
         Controls.Add(Guna2Button1)
         Controls.Add(Guna2ComboBox1)
-        Controls.Add(RichTextBox1)
         Controls.Add(Label2)
         Controls.Add(Guna2PictureBox1)
         FormBorderStyle = FormBorderStyle.None
         Name = "recommendation"
         Text = "recommendation"
         CType(Guna2PictureBox1, ComponentModel.ISupportInitialize).EndInit()
+        CType(Guna2DataGridView1, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
     End Sub
@@ -141,7 +188,7 @@ Partial Class recommendation
     Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
     Friend WithEvents Guna2PictureBox1 As Guna.UI2.WinForms.Guna2PictureBox
     Friend WithEvents Label2 As Label
-    Friend WithEvents RichTextBox1 As RichTextBox
     Friend WithEvents Guna2Button1 As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2ComboBox1 As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents Guna2DataGridView1 As Guna.UI2.WinForms.Guna2DataGridView
 End Class
