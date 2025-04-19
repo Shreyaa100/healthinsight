@@ -106,10 +106,9 @@ Public Class diagnosis
         End Using
     End Sub
 
-    ' Button click to navigate to Dashboard
-    Private Sub Guna2Button1_Click(sender As Object, e As EventArgs) Handles Guna2Button1.Click
+    Private Sub Guna2Button2_Click(sender As Object, e As EventArgs) Handles Guna2Button2.Click
         Dim dash As New Dashboard(LoggedInUserId)
         dash.Show()
-        Me.Hide()
+        Hide()
     End Sub
 End Class

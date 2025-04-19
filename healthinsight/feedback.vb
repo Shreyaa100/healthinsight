@@ -12,6 +12,14 @@ Public Class Feedback
     ' Load Feedback Form
     Private Sub FeedbackForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Ensure the user is logged in
+
+        Try
+            ' Your code here
+        Catch ex As Exception
+            MessageBox.Show("Error during form load: " & ex.Message)
+        End Try
+
+
         If LoggedInUserId = -1 Then
             MessageBox.Show("No user is logged in.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Me.Close()
@@ -50,33 +58,33 @@ Public Class Feedback
     End Function
 
     ' Save Feedback Button Click
-    Private Sub Guna2Button1_Click(sender As Object, e As EventArgs) Handles Guna2Button1.Click
+    Private Sub Guna2Button1_Click(sender As Object, e As EventArgs)
         Try
-            conn.Open()
+            conn.Open
 
             ' Get input values
-            Dim rating As Integer = CInt(Guna2RatingStar1.Value)
-            Dim comments As String = Guna2TextBox3.Text
-            Dim email As String = Guna2TextBox2.Text
+            Dim rating As Integer = Guna2RatingStar1.Value
+            Dim comments = Guna2TextBox3.Text
+            Dim email = Guna2TextBox2.Text
 
             ' Insert feedback into the database
-            Dim query As String = "INSERT INTO feedback (user_id, email, rating, comments) VALUES (@user_id, @email, @rating, @comments)"
+            Dim query = "INSERT INTO feedback (user_id, email, rating, comments) VALUES (@user_id, @email, @rating, @comments)"
             Using cmd As New MySqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@user_id", LoggedInUserId)
                 cmd.Parameters.AddWithValue("@email", email)
                 cmd.Parameters.AddWithValue("@rating", rating)
                 cmd.Parameters.AddWithValue("@comments", comments)
-                cmd.ExecuteNonQuery()
+                cmd.ExecuteNonQuery
             End Using
 
             MessageBox.Show("Thank you for your feedback!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Dim dash As New Dashboard()
-            dash.Show()
-            Me.Hide()
+            Dim dash As New Dashboard
+            dash.Show
+            Hide
         Catch ex As Exception
             MessageBox.Show("Error: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
-            conn.Close()
+            conn.Close
         End Try
     End Sub
 End Class

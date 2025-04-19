@@ -5,79 +5,84 @@ Public Class recommendation
     Dim conn As New MySqlConnection(connStr)
 
     Private Sub recommendation_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        LoadDiagnosisResults()
+        ' Clear textboxes initially
+        Guna2TextBox1.Clear()
+        Guna2TextBox2.Clear()
+        Guna2TextBox3.Clear()
     End Sub
 
-    Private Sub LoadDiagnosisResults()
+    ' ✅ Fetch the latest result_id from diagnosis_result
+    Private Function GetLatestResultId() As Integer
+        Dim resultId As Integer = -1
         Try
             If conn.State = ConnectionState.Closed Then conn.Open()
-            Dim cmd As New MySqlCommand("SELECT result_id, disease_name FROM diagnosis_result", conn)
-            Dim reader As MySqlDataReader = cmd.ExecuteReader()
+            Dim cmd As New MySqlCommand("SELECT MAX(result_id) FROM diagnosis_result", conn)
+            Dim result = cmd.ExecuteScalar()
+            If Not IsDBNull(result) Then resultId = Convert.ToInt32(result)
+        Catch ex As Exception
+            MessageBox.Show("Error fetching latest result ID: " & ex.Message)
+        Finally
+            If conn.State = ConnectionState.Open Then conn.Close()
+        End Try
+        Return resultId
+    End Function
 
-            Guna2ComboBox1.Items.Clear()
+    ' ✅ Load recommendation text by type into specified textbox
+    Private Sub LoadRecommendationText(recommendationType As String, textBox As Guna.UI2.WinForms.Guna2TextBox)
+        Dim resultId As Integer = GetLatestResultId()
+        If resultId = -1 Then Return
 
-            While reader.Read()
-                Dim item As String = reader("result_id").ToString() & " - " & reader("disease_name").ToString()
-                Guna2ComboBox1.Items.Add(item)
-            End While
+        Try
+            If conn.State = ConnectionState.Closed Then conn.Open()
+            Dim query As String = "SELECT recommendation_text FROM recommendations WHERE result_id = @result_id AND recommendation_type = @type LIMIT 1"
+            Dim cmd As New MySqlCommand(query, conn)
+            cmd.Parameters.AddWithValue("@result_id", resultId)
+            cmd.Parameters.AddWithValue("@type", recommendationType)
 
-            reader.Close()
-            conn.Close()
-
-            ' ✅ Automatically select the first item
-            If Guna2ComboBox1.Items.Count > 0 Then
-                Guna2ComboBox1.SelectedIndex = 0
-            End If
+            Dim result = cmd.ExecuteScalar()
+            textBox.Text = If(result IsNot Nothing, result.ToString(), "No recommendation available.")
 
         Catch ex As Exception
-            MessageBox.Show("Error: " & ex.Message)
+            MessageBox.Show("Error loading " & recommendationType & " recommendation: " & ex.Message)
         Finally
             If conn.State = ConnectionState.Open Then conn.Close()
         End Try
     End Sub
 
-    Private Sub Guna2ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles Guna2ComboBox1.SelectedIndexChanged
-        If Guna2ComboBox1.SelectedIndex <> -1 Then
-            Dim selectedItem As String = Guna2ComboBox1.SelectedItem.ToString()
-            Dim resultId As Integer = CInt(selectedItem.Split("-"c)(0).Trim())
-            LoadRecommendations(resultId)
+    ' ✅ Event handlers for checkboxes
+    Private Sub Guna2CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles Guna2CheckBox1.CheckedChanged
+        If Guna2CheckBox1.Checked Then
+            LoadRecommendationText("Natural", Guna2TextBox2)
+        Else
+            Guna2TextBox2.Clear()
         End If
     End Sub
 
-    Private Sub LoadRecommendations(resultId As Integer)
-        Try
-            If conn.State = ConnectionState.Closed Then conn.Open()
-
-            Dim query As String = "SELECT recommendation_type AS 'Type', recommendation_text AS 'Details' FROM recommendations WHERE result_id = @result_id"
-            Dim cmd As New MySqlCommand(query, conn)
-            cmd.Parameters.AddWithValue("@result_id", resultId)
-
-            ' Use a data adapter to fill a DataTable
-            Dim adapter As New MySqlDataAdapter(cmd)
-            Dim dt As New DataTable()
-            adapter.Fill(dt)
-
-            ' Bind the result to the DataGridView
-            Guna2DataGridView1.DataSource = dt
-
-            ' ✅ Resize and style the DataGridView for clean display
-            Guna2DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            Guna2DataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-            Guna2DataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True
-            Guna2DataGridView1.ReadOnly = True
-            Guna2DataGridView1.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 10, FontStyle.Bold)
-            Guna2DataGridView1.DefaultCellStyle.Font = New Font("Segoe UI", 10)
-
-        Catch ex As Exception
-            MessageBox.Show("Error: " & ex.Message)
-        Finally
-            If conn.State = ConnectionState.Open Then conn.Close()
-        End Try
+    Private Sub Guna2CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles Guna2CheckBox2.CheckedChanged
+        If Guna2CheckBox2.Checked Then
+            LoadRecommendationText("Commercial", Guna2TextBox1)
+        Else
+            Guna2TextBox1.Clear()
+        End If
     End Sub
 
+    Private Sub Guna2CheckBox3_CheckedChanged(sender As Object, e As EventArgs) Handles Guna2CheckBox3.CheckedChanged
+        If Guna2CheckBox3.Checked Then
+            LoadRecommendationText("Diet/Exercise", Guna2TextBox3)
+        Else
+            Guna2TextBox3.Clear()
+        End If
+    End Sub
+
+    ' ✅ Back to Dashboard button
     Private Sub Guna2Button1_Click(sender As Object, e As EventArgs) Handles Guna2Button1.Click
         Dim dash As New Dashboard()
         dash.Show()
         Me.Hide()
     End Sub
 End Class
+
+
+
+
+
